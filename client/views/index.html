@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="myChirperAngularApp">
+
+<head>
+
+    <base href="/">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <title> Lab 18 Return of the Chirps: a New Angle aka Take Your Stinking Paws Off Me!
+    </title>
+
+</head>
+
+<body>
+    <div ng-view> </div>
+    <!--this div is where the pieces that are 'torn out' of the other pages (various .html) will be put when they are called by client     -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-route.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-resource.js"></script>
+    <script src="app.js"></script>  <!--single page application -->
+    <script src="controllers.js"></script>
+    <script src="services.js"></script>
+    <script src="factories.js"></script>
+
+    <h1>My First Angular site</h1>
+
+    <div class="chirp-box">
+        <select id="user-selector">
+           <option value="">Please choose a user</option>
+       </select>
+        <input type="text" placeholder="Type your chirp here!" id="chirp-field">
+        <button class="enhanced-button" id=chirp-button disabled>Chirp!</button>
+
+    </div>
+
+    <div id="chirp-list"></div>
+
+    <script src="http://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous">
+
+    </script>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<div class="chirp-box">
+    <select id="user-selector" ng-model="newUserId">
+           <option value="">Please choose a user</option>
+           <option value="{{ u.id }}" ng-repeat="u in users">{{ u.name }}</option> <!--no quotes on u.name not equals-->
+           </select>
+    <input type="text" placeholder="Write your chirp here!" id="chirp-field" ng-model="newMessage">
+    <button class="enhanced-button" id="chirp-button" ng-click="createChirp">Chirp!</button>
+   
+</div>
+
+<div id="chirp-list">
+    <a ng-href= "/#!/chirps/{{ c.id }}" ng-repeat="c in chirps">
+        <div class="chirp">
+            <p>{{ c.message }}</p>
+            <h4>{{ c.userName }} </h4>
+            <h5>{{ c.timestamp | date: 'short' }}</h5> <!-- you can use limitTo to truncate a short piece like for a blog angularjs.org -->
+            </div>
+    </a>
+    </div>

@@ -1,0 +1,13 @@
+       <h1>Single View</h1>  
+       <div id="chirp-list">
+           <div class="chirp">
+            <p>{{ chirp.message }}</p>
+            <h4>{{ chirp.userName }} </h4>
+            <h5>{{ chirp.timestamp | date: 'short' }}</h5> <!-- you can use limitTo to truncate a short piece like for a blog angularjs.org -->
+            <div class="buton-block">
+                <button class="enhanced-button" ng-click="editChirp()">Update</button>
+                <button class="enhanced-button red" ng-click="deleteChirp()">Delete</button>
+            </div>
+       </div>
+       </div>
+      
