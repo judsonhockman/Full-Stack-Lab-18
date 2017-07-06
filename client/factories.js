@@ -1,16 +1,11 @@
-angular.module('myChirperAngularApp.factories', [])
-.factory('Chirpfactory', [function() {
-var f = {};
-
-f.getWordOfTheDay = function() {
-    return "Nooga";
-}
-return f;
-}])
-.factory('Chirp', ['$resource', function ($resource) {
+angular.module('chirper.factories', [])
+.factory('Chirp', ['$resource', function($resource) {
     return $resource('/api/chirps/:id', { id: '@id' }, {
-        update: {
-            method: 'PUT'
-        }
+    update: {
+        method: 'PUT'
+}
     });
-}]);
+}])
+.factory('User', ['$resource', function($resource) {
+            return $resource('/api/users/:id');
+    }]);

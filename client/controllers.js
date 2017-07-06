@@ -1,96 +1,59 @@
-angular.module('myChirperAngularApp.controllers', []) // no 'rule' that says this module must be named after the main module's name, it's just a handy convention. Must put in an array, even if it is empty. Otherwise, Angular will try to go out and find the module called myApp.controllers...which doesn't exist.
-    .controller('WelcomeController', ['$scope', 'ChirpFactory', function ($scope, ChirpFactory) {
+angular.module('chirper.controllers', []) // no 'rule' that says this module must be named after the main module's name, it's just a handy convention. Must put in an array, even if it is empty. Otherwise, Angular will try to go out and find the module called myApp.controllers...which doesn't exist.
+    .controller('ChirpListController', ['$scope', 'Chirp', 'User', function ($scope, Chirp, User) {
         getChirps();
 
-        $http({
-            method: 'GET',
-            url: '/api/users'
-        }).then(function (response) {
-            $scope.users = response.data;
-        }, function (err) {
-            console.log(err);
-        });
+        $scope.users = User.query();
 
         $scope.createChirp = function () {
             var payload = {
                 message: $scope.newMessage,
                 userid: $scope.newUserId
             };
-            $http({
-                method: 'POST',
-                url: '/api/chirps',
-                data: payload
-            }).then(function(reponse) {
+            var c = new Chirp(payload);
+            c.$save(function (success) {
                 $scope.newMessage = '';
                 $scope.newUserId = '';
                 getChirps();
             }, function (err) {
                 console.log(err);
-            })
-}
+            });
+        }
 
         function getChirps() {
-            return $http({
-                method: 'GET',
-                url: '/api/chirps'
-            }).then(function(response) {
-                $cope.chirps = response.data;
-            }, function (err) {
+            $scope.chirps = Chirp.query();
+        }
+    }])
+    .controller('SingleChirpController', ['$scope', 'Chirp', '$location', '$routeParams', function ($scope, Chirp, $location, $routeParams) {  // SingleChirpController also appears in applicationCache.js //
+       
+        $scope.chirp = Chirp.get({ id: $routeParams.theChirpId }); // .get is a $resource app
+
+        $scope.editChirp = function() {
+            $location.path('/api/chirps/' + $routeParams.theChirpId + '/update');
+        }
+        
+        $scope.deleteChirp = function () {
+            if (confirm('Are you sure you want to delete this chirp?')) {
+                    $scope.chirp.$delete(function(success) {
+                            $location.replace().path('/chirps');
+                    }, function(err) {
+                        console.log(err);
+                    });
+            }
+        }
+    }])
+    .controller('UpdateChirpController', ['$scope', 'Chirp', '$location', '$routeParams', function ($scope, Chirp, $location, $routeParams) {
+        $scope.chirp = Chirp.get({ id: $routeParams.theChirpId });
+        
+        $scope.updateChirp = function() {
+            $scope.chirp.$update(function() {
+// $location.path('/chirps/' + $routeParams.theChirpId); not this, but this...:window
+        window.history.back();
+            }, function(err) {
                 console.log(err);
             });
         }
-    }])
-    .controller('SingleChirpController', ['$scope', '$http', '$location', 'routeParams', function($scope, $http, $location, $routeParams) {
-    $http({
-        method: 'GET',
-        url: '/api/chirps/' + $routeParams.theChirpId
-    }).then(function(response) {
-        $scope.chirp = response.data;
-    }, function(err) {
-        console.log(err);
-    });
+    }]);
 
-    $scope.editChirp = function() {
-        $location.path('/api/chirps/' + $routeParams.theChirpId + '/update');
-            }
-
-    $scope.deleteChirp = function() {
-        if (confirm('Are you sure you want to delete this chirp?')) {
-        $http({
-            method: 'DELETE',
-            url: '/api/chirps/' + $routeParams.theChirpId 
-        }).then(function(response) {
-            $location.replace('/chirps');
-        },function(err) {
-            console.log(err);
-        });
-    }
-    }
-}])
-.controller('UpdateChirpController', ['$scope', '$http', '$location', '$routeParams', function($scope, $http, $location, $routeParams) {
-$http({
-    method: 'GET',
-    url: '/api/chirps/' +$routeParams.theChirpId
-}).then(function(response) {
-    $scope.chirp = response.data;
-}, function(err) {
-    console.log(err);
-});
-$scope.updateChirp = function() {
-    var payload = {
-        message: $scope.chirp.message
-    };
-    $http({
-        method: 'PUT',
-        url: '/api/chirps/' + $routeParams.theChirpId,
-    }).then(function(response) {
-        $location.path('/chirps/'  + $routeParams.theChirpId);
-    }, function(err) {
-        console.log(err);
-    });
-}
-}]);
-    
     //     $scope.greeting = 'Welcome to Chirper!';
     //     $scope.ChirpOfDay = ChirpFactory.getChirpOfTheDay();
     // }])

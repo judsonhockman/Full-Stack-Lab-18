@@ -4,7 +4,7 @@
            <option value="{{ u.id }}" ng-repeat="u in users">{{ u.name }}</option> <!--no quotes on u.name not equals-->
            </select>
     <input type="text" placeholder="Write your chirp here!" id="chirp-field" ng-model="newMessage">
-    <button class="enhanced-button" id="chirp-button" ng-click="createChirp">Chirp!</button>
+    <button class="enhanced-button" id="chirp-button" ng-click="createChirp()">Chirp!</button>
    
 </div>
 

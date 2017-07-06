@@ -21,12 +21,7 @@ app.use(express.static(clientPath));
 
 app.use(bodyParser.json());  // filters incoming and stores on req.body
 
-app.get('*', function (req, res, next) {
-    if (isAsset(req.url)) {
-    } else {
-        res.sendfile(path.join(clientPath, 'index.html'));
-    }
-});
+
 
 // app.use(bodyParser.json());  // filters incoming and stores on req.body
 app.route('/api/chirps')
@@ -74,18 +69,25 @@ app.route('/api/chirps/:id') // get all chirps
                 res.sendStatus(500);
             });
     });
-app.listen(3000);
-// app.get('/api/users', function (req, res) { // get one chirp
-//     rows('GetUsers') // rows because we want multiple things from the database
-//         .then(function (users) {
-//             res.send(users);
-//         }).catch(function (err) {
-//             console.log(err);
-//             res.sendStatus(500);
-//         });
-// });
 
-// app.listen(3000);
+// app.get('*', function (req, res, next) {
+//     if (isAsset(req.url)) {
+//     } else {
+//         res.sendfile(path.join(clientPath, 'index.html'));
+//     }
+// });
+//app.listen(3000);
+app.get('/api/users', function(req, res) { // get one chirp
+    rows('GetUsers') // rows because we want multiple things from the database
+        .then(function(users) {
+            res.send(users);
+        }).catch(function(err) {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
+app.listen(3000);
 
 // function isAsset(path) {
 //     var pieces = path.split('/');
@@ -104,54 +106,53 @@ app.listen(3000);
 
 
 
-// function callProcedure(procedureName, args) {
-//     return new Promise(function (resolve, reject) { // Called executof
-//         pool.getConnection(function (err, connection) {  // call-back...error is first parameter. Success is second.
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 var placeholders = '';
-//                 if (args && args.length > 0) {
-//                     for (var i = 0; i < args.length; i++) {
-//                         if (i === args.length - 1) {
-//                             placeholders += '?';
-//                         } else {
-//                             placeholders += '?,';
-//                         }
-//                     }
-//                 }
-//                 var callString = 'CALL ' + procedureName + '(' + placeholders + ');';
-//                 connection.query(callString, args, function(err, resultsets) {
-//                     connection.release();
-//                     if (err) {
-//                         reject(err);
-//                     } else {
-//                         resolve(resultsets);
-//                     }
-//                 });
-//             }
-//         });
-//     });
-// }
+function callProcedure(procedureName, args) {
+    return new Promise(function (resolve, reject) { // Called executof
+        pool.getConnection(function (err, connection) {  // call-back...error is first parameter. Success is second.
+            if (err) {
+                reject(err);
+            } else {
+                var placeholders = '';
+                if (args && args.length > 0) {
+                    for (var i = 0; i < args.length; i++) {
+                        if (i === args.length - 1) {
+                            placeholders += '?';
+                        } else {
+                            placeholders += '?,';
+                        }
+                    }
+                }
+                var callString = 'CALL ' + procedureName + '(' + placeholders + ');';
+                connection.query(callString, args, function(err, resultsets) {
+                    connection.release();
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(resultsets);
+                    }
+                });
+            }
+        });
+    });
+}
 
-// function rows(procedureName, args) {
-//     return callProcedure(procedureName, args)
-//         .then(function (resultsets) {
-//             return resultsets[0];
-//         });
-// }
+function rows(procedureName, args) {
+    return callProcedure(procedureName, args)
+        .then(function(resultsets) {
+            return resultsets[0];
+        });
+}
 
-// function row(procedureName, args) {
-//     return callProcedure(procedureName, args)
-//         .then(function (resultsets) {
-//             return resultsets[0][0];
-//         });
-// }
-// function empty(procedureName, args) {
-//     return callProcedure(procedureName, args)
-//         .then(function () {
-//             return;
-
-//         });
-// }
+function row(procedureName, args) {
+    return callProcedure(procedureName, args)
+        .then(function (resultsets) {
+            return resultsets[0][0];
+        });
+}
+function empty(procedureName, args) {
+    return callProcedure(procedureName, args)
+        .then(function() {
+            return;
+        });
+}
 
